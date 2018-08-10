@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+docker run -ti -w /opt -v $PWD:/opt node npm run gulp $@
