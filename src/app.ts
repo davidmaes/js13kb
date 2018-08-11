@@ -13,6 +13,8 @@ class Main
         this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
         this.camera = new Camera(this.gl);
         this.camera.render();
+
+
     }
 }
 

@@ -6,10 +6,14 @@
 
     <script id="vertex-shader" type="x-shader/x-vertex">
         attribute vec3 aPosition;
+        attribute vec3 aColor;
+        uniform mat4 uProjection;
+        uniform mat4 uModel;
+        uniform mat4 uView;
 
         void main(void) {
-            gl_Position = vec4(aPosition, 1.0);
-            gl_PointSize = 2.0;
+            gl_Position = uProjection * uView * uModel * vec4(aPosition, 1.0);
+            gl_PointSize = 3.0;
         }
     </script>
 
@@ -18,7 +22,7 @@
         precision mediump float;
 
         void main(void) {
-            gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
+            gl_FragColor = vec4(0.156, 0.803, 0.196, 1.0);
         }
 
     </script>
@@ -36,6 +40,6 @@
 
 </head>
 <body>
-    <canvas id="canvas" width="1024px" height="768px"></canvas>
+<canvas id="canvas" width="1024px" height="768px"></canvas>
 </body>
 </html>
