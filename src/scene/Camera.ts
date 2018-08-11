@@ -141,7 +141,7 @@ export default class Camera extends Object3D {
      */
     private setupViewMatrix() {
         this.viewMatrix = new Matrix();
-        this.viewMatrix.translate(0, -2, -6);
+        this.viewMatrix.translate(0, -2, 0);
     }
 
     /**
