@@ -1,7 +1,7 @@
 import Vector from "../math/Vector";
 
 export default class World {
-    readonly sections:Vector[];
+    readonly sections: Vector[];
 
     public constructor()
     {

@@ -2,5 +2,5 @@
 /vendor/
 /node_modules/
 /public/js/
-
+/example/
 /npm-debug.log

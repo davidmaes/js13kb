@@ -14,7 +14,6 @@ gulp.task('build', () => {
     return gulp.src('./src/**/*.ts')
         .pipe(plumber())
         .pipe(webpack(webpackConfig))
-        .pipe(uglify())
         .pipe(gulp.dest('./public/js/'));
 });
 

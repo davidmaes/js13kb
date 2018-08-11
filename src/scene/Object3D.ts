@@ -1,8 +1,8 @@
 import Matrix from "../math/Matrix";
 
-export default class Object {
+export default class Object3D {
 
-    private globalCoords:Matrix;
+    private globalCoords: Matrix;
     private localCoords: Matrix;
 
     public constructor() {
