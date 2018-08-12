@@ -2,14 +2,14 @@
   "name": "js13kb",
   "version": "1.0.0",
   "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-plumber": "^1.1.0",
-    "gulp-uglify": "^3.0.0",
-    "ts-loader": "^3.0.2",
-    "tslint": "^5.7.0",
-    "tslint-loader": "^3.5.3",
-    "typescript": "^2.5.3",
-    "webpack-stream": "^4.0.0"
+    "gulp": "^4.0.0",
+    "gulp-plumber": "^1.2.0",
+    "gulp-uglify": "^3.0.1",
+    "ts-loader": "^4.4.2",
+    "tslint": "^5.11.0",
+    "tslint-loader": "^3.6.0",
+    "typescript": "^3.0.1",
+    "webpack-stream": "^5.1.1"
   },
   "scripts": {
     "gulp": "gulp"
