@@ -2,22 +2,50 @@ import Camera from "./scene/Camera";
 
 class Main
 {
-    private canvas: HTMLCanvasElement;
-    private gl: WebGLRenderingContext;
+    /**
+     *
+     */
+    private renderCallback: FrameRequestCallback;
+
+    /**
+     *
+     */
     private camera: Camera;
 
-    public constructor()
-    {
-        this.canvas = <HTMLCanvasElement> document.getElementById('canvas');
-        this.gl = <WebGLRenderingContext> this.canvas.getContext('webgl');
-        this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+    /**
+     *
+     */
+    private gl: WebGLRenderingContext;
+
+    /**
+     *
+     */
+    public constructor() {
+        let canvas = <HTMLCanvasElement> document.getElementById('canvas');
+        this.gl = <WebGLRenderingContext> canvas.getContext('webgl');
+
+        this.gl.viewport(0, 0, canvas.width, canvas.height);
+
         this.camera = new Camera(this.gl);
-        this.camera.render();
 
+        this.renderCallback = this.render.bind(this);
+        this.render();
+    }
 
+    /**
+     *
+     */
+    private render()
+    {
+        this.camera.render(this.gl);
+
+        window.requestAnimationFrame(this.renderCallback);
     }
 }
 
+/**
+ *
+ */
 addEventListener('load', function(){
     new Main();
 });
