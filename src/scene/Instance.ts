@@ -13,9 +13,9 @@ export default class Instance extends Matrix
         this.isFixed = false;
 
         this.translate(
-            Math.random(),
-            Math.random(),
-            Math.random()
+            -5 + Math.random() * 10,
+            -5 + Math.random() * 10,
+            -Math.random() * 10,
         );
     }
 

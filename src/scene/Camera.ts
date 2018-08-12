@@ -110,9 +110,10 @@ export default class Camera {
      */
     private setupInstances() {
         this.instances = [];
-        this.instances.push(new Instance);
-        this.instances.push(new Instance);
-        this.instances.push(new Instance);
+
+        for (let i = 0; i < 10000; i++) {
+            this.instances.push(new Instance);
+        }
     }
 
     /**
