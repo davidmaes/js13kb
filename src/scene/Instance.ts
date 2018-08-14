@@ -1,29 +1,24 @@
 import Matrix from "../math/Matrix";
+import Renderable from "../renderables/Renderable";
 
-export default class Instance extends Matrix
+export default abstract class Instance extends Matrix
 {
-    private isFixed: boolean;
+    private renderable: Renderable;
 
     /**
-     *
+     * @param {Renderable} renderable
      */
-    public constructor() {
+    protected constructor(renderable: Renderable)
+    {
         super();
 
-        this.isFixed = false;
-
-        this.translate(
-            -5 + Math.random() * 10,
-            -5 + Math.random() * 10,
-            -Math.random() * 10,
-        );
+        this.renderable = renderable;
     }
 
     /**
-     *
+     * @returns {Renderable}
      */
-    public animate()
-    {
-        this.rotateY(0.01);
+    getRenderable() {
+        return this.renderable;
     }
 }

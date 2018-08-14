@@ -1,22 +1,13 @@
 import Matrix from "../math/Matrix";
-import Triangle from "../objects/Triangle";
+import Renderable from "../renderables/Renderable";
 import Instance from "./Instance";
 
-export default class Camera {
+export default class Camera
+{
     /**
      *
      */
-    private triangle: Triangle;
-
-    /**
-     *
-     */
-    private instances: Instance[];
-
-    /**
-     *
-     */
-    private modelMatrixIndex: WebGLUniformLocation;
+    private gl: WebGLRenderingContext;
 
     /**
      *
@@ -26,41 +17,16 @@ export default class Camera {
     /**
      *
      */
-    private viewMatrixIndex: WebGLUniformLocation;
-
-    /**
-     *
-     */
     private projectionMatrix: Matrix;
-
-    /**
-     *
-     */
-    private projectionMatrixIndex: WebGLUniformLocation;
-
-    /**
-     *
-     */
 
     /**
      * @param {WebGLRenderingContext} gl
      */
     public constructor(gl: WebGLRenderingContext)
     {
-        this.setupModel(gl);
+        this.gl = gl;
         this.setupMatrices();
-        this.setupMatrixIndices(gl);
-        this.configureGL(gl);
-        this.setupInstances();
-    }
-
-    /**
-     *
-     * @param {WebGLRenderingContext} gl
-     */
-    private setupModel(gl: WebGLRenderingContext)
-    {
-        this.triangle = new Triangle(gl);
+        this.configureGL();
     }
 
     /**
@@ -70,99 +36,55 @@ export default class Camera {
     {
         this.projectionMatrix = new Matrix();
         this.projectionMatrix.perspective(45, 1027 / 768, 1, 100);
-
         this.viewMatrix = new Matrix();
         this.viewMatrix.translate(0, -1, -4);
     }
 
     /**
-     *
-     */
-    private setupMatrixIndices(gl: WebGLRenderingContext)
-    {
-        this.projectionMatrixIndex = gl.getUniformLocation(
-            this.triangle.getShaderProgram(),
-            "uProjection"
-        );
-
-        this.viewMatrixIndex = gl.getUniformLocation(
-            this.triangle.getShaderProgram(),
-            "uView"
-        );
-
-        this.modelMatrixIndex = gl.getUniformLocation(
-            this.triangle.getShaderProgram(),
-            "uModel"
-        );
-    }
-
-    /**
      * @param {WebGLRenderingContext} gl
      */
-    private configureGL(gl: WebGLRenderingContext)
+    private configureGL()
     {
-        gl.clearColor(0.0, 0.0, 0.0, 1.0);
-        gl.enable(gl.DEPTH_TEST);
+        this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        this.gl.enable(this.gl.DEPTH_TEST);
     }
 
     /**
      *
+     * @param {WebGLRenderingContext} gl
      */
-    private setupInstances() {
-        this.instances = [];
+    public clear()
+    {
+        this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+    }
 
-        for (let i = 0; i < 10000; i++) {
-            this.instances.push(new Instance);
+    /**
+     * Note that this function expects instances of only one Renderable at at time.
+     */
+    public renderInstances(instances:Instance[])
+    {
+        let firstInstance: Instance = instances[0];
+        let firstRenderable: Renderable = firstInstance.getRenderable();
+
+        this.uploadMatrix(firstRenderable.getViewMatrixIndex(), this.viewMatrix);
+        this.uploadMatrix(firstRenderable.getProjectionMatrixIndex(), this.projectionMatrix);
+
+        this.gl.useProgram(firstRenderable.getProgram());
+
+        for (let instance of instances) {
+            let renderable: Renderable = instance.getRenderable();
+
+            this.uploadMatrix(renderable.getModelMatrixIndex(), instance);
+
+            renderable.draw();
         }
     }
 
     /**
      *
      */
-    public render(gl: WebGLRenderingContext)
+    private uploadMatrix(index: WebGLUniformLocation, matrix: Matrix)
     {
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        gl.useProgram(this.triangle.getShaderProgram());
-
-        this.uploadProjectionMatrix(gl);
-        this.uploadViewMatrix(gl);
-
-        for (let i = 0; i < this.instances.length; i++) {
-            let instance: Instance = this.instances[i];
-            instance.animate();
-            this.uploadModelMatrix(gl, instance);
-
-            gl.drawArrays(gl.LINE_LOOP, 0, 3);
-        }
-    }
-
-    /**
-     *
-     */
-    private uploadProjectionMatrix(gl: WebGLRenderingContext)
-    {
-        gl.uniformMatrix4fv(
-            gl.getUniformLocation(
-                this.triangle.getShaderProgram(),
-                "uProjection"
-            ),
-            false,
-            this.projectionMatrix.getMatrix()
-        );
-    }
-    /**
-     *
-     */
-    private uploadViewMatrix(gl: WebGLRenderingContext)
-    {
-        gl.uniformMatrix4fv(this.viewMatrixIndex, false, this.viewMatrix.getMatrix());
-    }
-
-    /**
-     *
-     */
-    private uploadModelMatrix(gl: WebGLRenderingContext, matrix: Matrix)
-    {
-        gl.uniformMatrix4fv(this.modelMatrixIndex, false, matrix.getMatrix());
+        this.gl.uniformMatrix4fv(index, false, matrix.getMatrix());
     }
 }

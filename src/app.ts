@@ -1,4 +1,5 @@
 import Camera from "./scene/Camera";
+import World from "./scene/World";
 
 class Main
 {
@@ -10,7 +11,7 @@ class Main
     /**
      *
      */
-    private camera: Camera;
+    private world: World;
 
     /**
      *
@@ -26,18 +27,19 @@ class Main
 
         this.gl.viewport(0, 0, canvas.width, canvas.height);
 
-        this.camera = new Camera(this.gl);
+        this.world = new World(this.gl);
 
-        this.renderCallback = this.render.bind(this);
-        this.render();
+        this.renderCallback = this.gameLoop.bind(this);
+        this.gameLoop();
     }
 
     /**
      *
      */
-    private render()
+    private gameLoop()
     {
-        this.camera.render(this.gl);
+        this.world.render();
+        this.world.animate();
 
         window.requestAnimationFrame(this.renderCallback);
     }
