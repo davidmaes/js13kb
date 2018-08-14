@@ -41,7 +41,6 @@ export default class Camera
     }
 
     /**
-     * @param {WebGLRenderingContext} gl
      */
     private configureGL()
     {
@@ -51,7 +50,6 @@ export default class Camera
 
     /**
      *
-     * @param {WebGLRenderingContext} gl
      */
     public clear()
     {
@@ -86,5 +84,36 @@ export default class Camera
     private uploadMatrix(index: WebGLUniformLocation, matrix: Matrix)
     {
         this.gl.uniformMatrix4fv(index, false, matrix.getMatrix());
+    }
+
+    /**
+     * @param x
+     * @param y
+     * @param z
+     */
+    public translate(x, y, z)
+    {
+        this.viewMatrix.translate(x, y, z)
+    }
+
+    /**
+     * @param angle
+     */
+    public rotateX(angle) {
+        this.viewMatrix.rotateX(angle);
+    }
+
+    /**
+     * @param angle
+     */
+    public rotateY(angle) {
+        this.viewMatrix.rotateY(angle);
+    }
+
+    /**
+     * @param angle
+     */
+    public rotateZ(angle) {
+        this.viewMatrix.rotateZ(angle);
     }
 }

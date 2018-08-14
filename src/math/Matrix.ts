@@ -1,7 +1,11 @@
 export default class Matrix {
-    private m: Float32Array;
+    protected m: Float32Array;
 
-    public constructor() {
+    /**
+     *
+     */
+    public constructor()
+    {
         this.identity();
     }
 
@@ -24,7 +28,12 @@ export default class Matrix {
         ]);
     }
 
-
+    /**
+     * @param fov
+     * @param aspect
+     * @param zMin
+     * @param zMax
+     */
     public perspective(fov, aspect, zMin, zMax) {
         let angle = Math.tan((fov * 0.5) * Math.PI / 180);
 
@@ -36,12 +45,20 @@ export default class Matrix {
         ]);
     }
 
+    /**
+     * @param x
+     * @param y
+     * @param z
+     */
     public translate(x, y, z) {
         this.m[12] += x;
         this.m[13] += y;
         this.m[14] += z;
     }
 
+    /**
+     * @param angle
+     */
     public rotateY(angle) {
         let cos = Math.cos(angle);
         let sin = Math.sin(angle);
@@ -58,7 +75,9 @@ export default class Matrix {
         this.m[10] = cos *this.m[10]-sin *mv8;
     }
 
-
+    /**
+     * @param angle
+     */
     public rotateZ(angle) {
         let cos = Math.cos(angle);
         let s = Math.sin(angle);
@@ -76,7 +95,6 @@ export default class Matrix {
     }
 
     /**
-     *
      * @param angle
      */
     public rotateX(angle) {
@@ -93,21 +111,5 @@ export default class Matrix {
         this.m[2] = this.m[2]*cos+mv1*s;
         this.m[6] = this.m[6]*cos+mv5*s;
         this.m[10] = this.m[10]*cos+mv9*s;
-    }
-
-    /**
-     *
-     * @param {Matrix} n
-     */
-    public copyFrom(n: Matrix) {
-
-        let v = n.getMatrix();
-
-        this.m = new Float32Array([
-            v[0], v[1], v[2], v[3],
-            v[4], v[5], v[6], v[7],
-            v[8], v[9], v[10], v[11],
-            v[12], v[13], v[14], v[15]
-        ]);
     }
 }

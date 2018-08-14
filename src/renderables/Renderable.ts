@@ -87,7 +87,6 @@ export default abstract class Renderable
     }
 
     /**
-     * @param {WebGLRenderingContext} gl
      * @param {string} id
      * @param {number} type
      * @returns {WebGLShader}
@@ -124,7 +123,7 @@ export default abstract class Renderable
     abstract getVertices();
 
     /**
-     * @param {WebGLRenderingContext} gl
+     *
      */
     private retrieveMatrixIndices() {
         this.modelMatrixIndex = this.gl.getUniformLocation(this.program, "uModel");

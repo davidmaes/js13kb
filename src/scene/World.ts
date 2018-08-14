@@ -17,11 +17,6 @@ export default class World
     /**
      *
      */
-    private track: Track;
-
-    /**
-     *
-     */
     private trackInstances: TrackInstance[];
 
     /**
@@ -38,10 +33,17 @@ export default class World
     public genesis()
     {
         this.camera = new Camera(this.gl);
-
-        this.track = new Track(this.gl);
         this.trackInstances = [];
-        this.trackInstances.push(new TrackInstance(this.track));
+
+        let track = new Track(this.gl);
+
+        for (let i = 0; i < 100; i++) {
+            let trackInstance = new TrackInstance(track);
+            trackInstance.translate(0, 0, -i * 2);
+            this.trackInstances.push(trackInstance);
+
+        }
+
     }
 
     /**
@@ -61,5 +63,7 @@ export default class World
         for (let i = 0; i < this.trackInstances.length; i++) {
             this.trackInstances[i].animate();
         }
+
+        this.camera.translate(0, 0, 0.1);
     }
 }

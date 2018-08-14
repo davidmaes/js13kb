@@ -15,6 +15,5 @@ export default class TrackInstance extends Instance
      */
     public animate()
     {
-        this.rotateY(0.01);
     }
 }

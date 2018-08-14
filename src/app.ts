@@ -1,4 +1,3 @@
-import Camera from "./scene/Camera";
 import World from "./scene/World";
 
 class Main
