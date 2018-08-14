@@ -28,7 +28,7 @@ class Main
         this.gl.viewport(0, 0, canvas.width, canvas.height);
 
         this.world = new World(this.gl);
-
+        this.world.genesis();
         this.renderCallback = this.gameLoop.bind(this);
         this.gameLoop();
     }

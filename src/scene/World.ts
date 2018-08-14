@@ -25,29 +25,27 @@ export default class World
     private trackInstances: TrackInstance[];
 
     /**
-     *
      * @param {WebGLRenderingContext} gl
      */
     constructor(gl: WebGLRenderingContext)
     {
         this.gl = gl;
-        this.camera = new Camera(gl);
-
-        this.setupInstances(gl);
     }
 
     /**
-     *
+     * Create all the instances in the world.
      */
-    private setupInstances(gl: WebGLRenderingContext)
+    public genesis()
     {
-        this.track = new Track(gl);
+        this.camera = new Camera(this.gl);
+
+        this.track = new Track(this.gl);
         this.trackInstances = [];
         this.trackInstances.push(new TrackInstance(this.track));
     }
 
     /**
-     *
+     * Render the world.
      */
     public render()
     {
