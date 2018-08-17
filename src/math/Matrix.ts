@@ -12,7 +12,7 @@ export default class Matrix {
     /**
      *
      */
-    public getMatrix() {
+    public getFloat32Array() {
         return this.m;
     }
 
@@ -51,65 +51,89 @@ export default class Matrix {
      * @param z
      */
     public translate(x, y, z) {
-        this.m[12] += x;
-        this.m[13] += y;
-        this.m[14] += z;
+        this.m = new Float32Array([
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            x, y, z, 1,
+        ]);
     }
 
     /**
-     * @param angle
+     * @param degrees
      */
-    public rotateY(angle) {
-        let cos = Math.cos(angle);
-        let sin = Math.sin(angle);
-        let mv0 = this.m[0];
-        let mv4 = this.m[4];
-        let mv8 = this.m[8];
+    public rotateX(degrees) {
+        let radians = degrees * Math.PI / 180;
+        let sin = Math.sin(radians);
+        let cos = Math.cos(radians);
 
-        this.m[0] = cos *this.m[0]+sin *this.m[2];
-        this.m[4] = cos *this.m[4]+sin *this.m[6];
-        this.m[8] = cos *this.m[8]+sin *this.m[10];
-
-        this.m[2] = cos *this.m[2]-sin *mv0;
-        this.m[6] = cos *this.m[6]-sin *mv4;
-        this.m[10] = cos *this.m[10]-sin *mv8;
+        this.m = new Float32Array([
+            1, 0, 0, 0,
+            0, cos, sin, 0,
+            0, -sin, cos, 0,
+            0, 0, 0, 1,
+        ]);
     }
 
     /**
-     * @param angle
+     * @param degrees
      */
-    public rotateZ(angle) {
-        let cos = Math.cos(angle);
-        let s = Math.sin(angle);
-        let mv0 = this.m[0];
-        let mv4 = this.m[4];
-        let mv8 = this.m[8];
+    public rotateY(degrees) {
+        let radians = degrees * Math.PI / 180;
+        let sin = Math.sin(radians);
+        let cos = Math.cos(radians);
 
-        this.m[0] = cos*this.m[0]-s*this.m[1];
-        this.m[4] = cos*this.m[4]-s*this.m[5];
-        this.m[8] = cos*this.m[8]-s*this.m[9];
-
-        this.m[1]=cos*this.m[1]+s*mv0;
-        this.m[5]=cos*this.m[5]+s*mv4;
-        this.m[9]=cos*this.m[9]+s*mv8;
+        this.m = new Float32Array([
+            cos, 0, -sin, 0,
+            0, 1, 0, 0,
+            sin, 0, cos, 0,
+            0, 0, 0, 1,
+        ]);
     }
 
     /**
-     * @param angle
+     * @param degrees
      */
-    public rotateX(angle) {
-        let cos = Math.cos(angle);
-        let s = Math.sin(angle);
-        let mv1 = this.m[1];
-        let mv5 = this.m[5];
-        let mv9 = this.m[9];
+    public rotateZ(degrees) {
+        let radians = degrees * Math.PI / 180;
+        let sin = Math.sin(radians);
+        let cos = Math.cos(radians);
 
-        this.m[1] = this.m[1]*cos-this.m[2]*s;
-        this.m[5] = this.m[5]*cos-this.m[6]*s;
-        this.m[9] = this.m[9]*cos-this.m[10]*s;
+        this.m = new Float32Array([
+            cos, sin, 0, 0,
+            -sin, cos, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1,
+        ]);
+    }
 
-        this.m[2] = this.m[2]*cos+mv1*s;
-        this.m[6] = this.m[6]*cos+mv5*s;
-        this.m[10] = this.m[10]*cos+mv9*s;
+    /**
+     *
+     */
+    public multiply(matrix: Matrix)
+    {
+        let lhs = this.m;
+        let rhs = matrix.getFloat32Array();
+
+        this.m = new Float32Array([
+            lhs[0] * rhs[0] + lhs[1] * rhs[4] + lhs[2] * rhs[8] + lhs[3] * rhs[12],
+            lhs[0] * rhs[1] + lhs[1] * rhs[5] + lhs[2] * rhs[9] + lhs[3] * rhs[13],
+            lhs[0] * rhs[2] + lhs[1] * rhs[6] + lhs[2] * rhs[10] + lhs[3] * rhs[14],
+            lhs[0] * rhs[3] + lhs[1] * rhs[7] + lhs[2] * rhs[11] + lhs[3] * rhs[15],
+            lhs[4] * rhs[0] + lhs[5] * rhs[4] + lhs[6] * rhs[8] + lhs[7] * rhs[12],
+            lhs[4] * rhs[1] + lhs[5] * rhs[5] + lhs[6] * rhs[9] + lhs[7] * rhs[13],
+            lhs[4] * rhs[2] + lhs[5] * rhs[6] + lhs[6] * rhs[10] + lhs[7] * rhs[14],
+            lhs[4] * rhs[3] + lhs[5] * rhs[7] + lhs[6] * rhs[11] + lhs[7] * rhs[15],
+            lhs[8] * rhs[0] + lhs[9] * rhs[4] + lhs[10] * rhs[8] + lhs[11] * rhs[12],
+            lhs[8] * rhs[1] + lhs[9] * rhs[5] + lhs[10] * rhs[9] + lhs[11] * rhs[13],
+            lhs[8] * rhs[2] + lhs[9] * rhs[6] + lhs[10] * rhs[10] + lhs[11] * rhs[14],
+            lhs[8] * rhs[3] + lhs[9] * rhs[7] + lhs[10] * rhs[11] + lhs[11] * rhs[15],
+            lhs[12] * rhs[0] + lhs[13] * rhs[4] + lhs[14] * rhs[8] + lhs[15] * rhs[12],
+            lhs[12] * rhs[1] + lhs[13] * rhs[5] + lhs[14] * rhs[9] + lhs[15] * rhs[13],
+            lhs[12] * rhs[2] + lhs[13] * rhs[6] + lhs[14] * rhs[10] + lhs[15] * rhs[14],
+            lhs[12] * rhs[3] + lhs[13] * rhs[7] + lhs[14] * rhs[11] + lhs[15] * rhs[15]
+        ]);
+
+        console.log(this.m);
     }
 }

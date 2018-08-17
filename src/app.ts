@@ -1,4 +1,6 @@
 import World from "./scene/World";
+import Controller from "./controller/Controller";
+import Camera from "./scene/Camera";
 
 class Main
 {
@@ -15,20 +17,27 @@ class Main
     /**
      *
      */
-    private gl: WebGLRenderingContext;
+    private camera: Camera;
+
+    /**
+     *
+     */
+    private controller: Controller;
 
     /**
      *
      */
     public constructor() {
         let canvas = <HTMLCanvasElement> document.getElementById('canvas');
-        this.gl = <WebGLRenderingContext> canvas.getContext('webgl');
 
-        this.gl.viewport(0, 0, canvas.width, canvas.height);
+        let gl = <WebGLRenderingContext> canvas.getContext('webgl');
 
-        this.world = new World(this.gl);
+        this.camera = new Camera(gl, canvas.width, canvas.height);
+        this.controller = new Controller(this.camera);
+        this.world = new World(gl, this.camera);
         this.world.genesis();
         this.renderCallback = this.gameLoop.bind(this);
+
         this.gameLoop();
     }
 
@@ -40,7 +49,9 @@ class Main
         this.world.render();
         this.world.animate();
 
+        this.controller.onFrame();
         window.requestAnimationFrame(this.renderCallback);
+
     }
 }
 

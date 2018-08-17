@@ -1,6 +1,7 @@
 import Camera from "./Camera";
 import TrackInstance from "./TrackInstance";
 import Track from "../renderables/Track";
+import Matrix from "../math/Matrix";
 
 export default class World
 {
@@ -21,10 +22,12 @@ export default class World
 
     /**
      * @param {WebGLRenderingContext} gl
+     * @param camera
      */
-    constructor(gl: WebGLRenderingContext)
+    constructor(gl: WebGLRenderingContext, camera: Camera)
     {
         this.gl = gl;
+        this.camera = camera;
     }
 
     /**
@@ -32,7 +35,6 @@ export default class World
      */
     public genesis()
     {
-        this.camera = new Camera(this.gl);
         this.trackInstances = [];
 
         let track = new Track(this.gl);
@@ -44,6 +46,10 @@ export default class World
 
         }
 
+        let m: Matrix;
+        m = new Matrix();
+        m.translate(0, -1, 0);
+        this.camera.transform(m);
     }
 
     /**
@@ -60,10 +66,6 @@ export default class World
      */
     public animate()
     {
-        for (let i = 0; i < this.trackInstances.length; i++) {
-            this.trackInstances[i].animate();
-        }
 
-        this.camera.translate(0, 0, 0.1);
     }
 }

@@ -21,12 +21,14 @@ export default class Camera
 
     /**
      * @param {WebGLRenderingContext} gl
+     * @param width
+     * @param height
      */
-    public constructor(gl: WebGLRenderingContext)
+    public constructor(gl: WebGLRenderingContext, width: number, height: number)
     {
         this.gl = gl;
         this.setupMatrices();
-        this.configureGL();
+        this.configureGL(width, height);
     }
 
     /**
@@ -37,15 +39,17 @@ export default class Camera
         this.projectionMatrix = new Matrix();
         this.projectionMatrix.perspective(45, 1027 / 768, 1, 100);
         this.viewMatrix = new Matrix();
-        this.viewMatrix.translate(0, -1, -4);
     }
 
     /**
+     * @param {number} width
+     * @param {number} height
      */
-    private configureGL()
-    {
+    private configureGL(width: number, height: number) {
         this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
         this.gl.enable(this.gl.DEPTH_TEST);
+        this.gl.viewport(0, 0, width, height);
+
     }
 
     /**
@@ -64,10 +68,10 @@ export default class Camera
         let firstInstance: Instance = instances[0];
         let firstRenderable: Renderable = firstInstance.getRenderable();
 
+        this.gl.useProgram(firstRenderable.getProgram());
+
         this.uploadMatrix(firstRenderable.getViewMatrixIndex(), this.viewMatrix);
         this.uploadMatrix(firstRenderable.getProjectionMatrixIndex(), this.projectionMatrix);
-
-        this.gl.useProgram(firstRenderable.getProgram());
 
         for (let instance of instances) {
             let renderable: Renderable = instance.getRenderable();
@@ -83,37 +87,14 @@ export default class Camera
      */
     private uploadMatrix(index: WebGLUniformLocation, matrix: Matrix)
     {
-        this.gl.uniformMatrix4fv(index, false, matrix.getMatrix());
+        this.gl.uniformMatrix4fv(index, false, matrix.getFloat32Array());
     }
 
     /**
-     * @param x
-     * @param y
-     * @param z
+     * @param {Matrix} matrix
      */
-    public translate(x, y, z)
+    public transform(matrix: Matrix)
     {
-        this.viewMatrix.translate(x, y, z)
-    }
-
-    /**
-     * @param angle
-     */
-    public rotateX(angle) {
-        this.viewMatrix.rotateX(angle);
-    }
-
-    /**
-     * @param angle
-     */
-    public rotateY(angle) {
-        this.viewMatrix.rotateY(angle);
-    }
-
-    /**
-     * @param angle
-     */
-    public rotateZ(angle) {
-        this.viewMatrix.rotateZ(angle);
+        this.viewMatrix.multiply(matrix);
     }
 }

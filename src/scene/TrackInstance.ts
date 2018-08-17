@@ -9,11 +9,4 @@ export default class TrackInstance extends Instance
     public constructor(renderable: Renderable) {
         super(renderable);
     }
-
-    /**
-     *
-     */
-    public animate()
-    {
-    }
 }
