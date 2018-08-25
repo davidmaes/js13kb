@@ -97,25 +97,25 @@ export default class Controller
         this.camera.transform(m);
         if (this.up) {
             m = new Matrix();
-            m.translate(0, 0, 0.1);
+            m.translate(0, 0, -0.1);
             this.camera.transform(m);
         }
 
         if (this.right) {
             m = new Matrix();
-            m.rotateY(1);
+            m.rotateY(-1);
             this.camera.transform(m);
         }
 
         if (this.down) {
             m = new Matrix();
-            m.translate(0, 0, -0.1);
+            m.translate(0, 0, 0.1);
             this.camera.transform(m);
         }
 
         if (this.left) {
             m = new Matrix();
-            m.rotateY(-1);
+            m.rotateY(1);
             this.camera.transform(m);
         }
     }

@@ -1,6 +1,7 @@
 import Matrix from "../math/Matrix";
 import Renderable from "../renderables/Renderable";
 import Instance from "./Instance";
+import ViewMatrix from "../math/ViewMatrix";
 
 export default class Camera
 {
@@ -12,7 +13,7 @@ export default class Camera
     /**
      *
      */
-    private viewMatrix: Matrix;
+    private viewMatrix: ViewMatrix;
 
     /**
      *
@@ -37,8 +38,8 @@ export default class Camera
     private setupMatrices()
     {
         this.projectionMatrix = new Matrix();
-        this.projectionMatrix.perspective(45, 1027 / 768, 1, 100);
-        this.viewMatrix = new Matrix();
+        this.projectionMatrix.perspective(45, 1024 / 768, 1, 100);
+        this.viewMatrix = new ViewMatrix();
     }
 
     /**
@@ -55,28 +56,26 @@ export default class Camera
     /**
      *
      */
-    public clear()
-    {
+    public clear() {
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
     }
 
     /**
      * Note that this function expects instances of only one Renderable at at time.
      */
-    public renderInstances(instances:Instance[])
-    {
+    public renderInstances(instances:Instance[]) {
         let firstInstance: Instance = instances[0];
         let firstRenderable: Renderable = firstInstance.getRenderable();
 
         this.gl.useProgram(firstRenderable.getProgram());
 
-        this.uploadMatrix(firstRenderable.getViewMatrixIndex(), this.viewMatrix);
-        this.uploadMatrix(firstRenderable.getProjectionMatrixIndex(), this.projectionMatrix);
+        this.uploadMatrix(firstRenderable.getViewMatrixIndex(), this.viewMatrix.getInvertedFloat32Array());
+        this.uploadMatrix(firstRenderable.getProjectionMatrixIndex(), this.projectionMatrix.getFloat32Array());
 
         for (let instance of instances) {
             let renderable: Renderable = instance.getRenderable();
 
-            this.uploadMatrix(renderable.getModelMatrixIndex(), instance);
+            this.uploadMatrix(renderable.getModelMatrixIndex(), instance.getFloat32Array());
 
             renderable.draw();
         }
@@ -85,16 +84,14 @@ export default class Camera
     /**
      *
      */
-    private uploadMatrix(index: WebGLUniformLocation, matrix: Matrix)
-    {
-        this.gl.uniformMatrix4fv(index, false, matrix.getFloat32Array());
+    private uploadMatrix(index: WebGLUniformLocation, matrix: Float32Array) {
+        this.gl.uniformMatrix4fv(index, false, matrix);
     }
 
     /**
      * @param {Matrix} matrix
      */
-    public transform(matrix: Matrix)
-    {
-        this.viewMatrix.multiply(matrix);
+    public transform(matrix: Matrix) {
+        this.viewMatrix.prepend(matrix);
     }
 }

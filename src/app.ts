@@ -33,9 +33,10 @@ class Main
         let gl = <WebGLRenderingContext> canvas.getContext('webgl');
 
         this.camera = new Camera(gl, canvas.width, canvas.height);
-        this.controller = new Controller(this.camera);
         this.world = new World(gl, this.camera);
         this.world.genesis();
+        this.controller = new Controller(this.camera);
+
         this.renderCallback = this.gameLoop.bind(this);
 
         this.gameLoop();
@@ -48,10 +49,9 @@ class Main
     {
         this.world.render();
         this.world.animate();
-
         this.controller.onFrame();
-        window.requestAnimationFrame(this.renderCallback);
 
+        window.requestAnimationFrame(this.renderCallback);
     }
 }
 

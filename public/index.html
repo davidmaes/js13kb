@@ -7,15 +7,15 @@
     <script id="vertex-shader" type="x-shader/x-vertex">
         attribute vec3 aPosition;
         attribute vec3 aColor;
+
         uniform mat4 uProjection;
         uniform mat4 uModel;
         uniform mat4 uView;
 
         void main(void) {
             gl_Position = uProjection * uView * uModel * vec4(aPosition, 1.0);
-            //gl_Position = vec4(aPosition, 1.0) * uModel * uView * uProjection;
-            gl_PointSize = 3.0;
         }
+
     </script>
 
     <script id="fragment-shader" type="x-shader/x-fragment">

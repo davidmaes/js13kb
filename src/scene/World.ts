@@ -39,16 +39,16 @@ export default class World
 
         let track = new Track(this.gl);
 
-        for (let i = 0; i < 100; i++) {
-            let trackInstance = new TrackInstance(track);
-            trackInstance.translate(0, 0, -i * 2);
-            this.trackInstances.push(trackInstance);
-
+        for (let x = 0; x < 10; x++) {
+            for (let z = 0; z < 10; z++) {
+                let trackInstance = new TrackInstance(track);
+                trackInstance.translate(-10 + x * 2, 0, z * -2);
+                this.trackInstances.push(trackInstance);
+            }
         }
 
-        let m: Matrix;
-        m = new Matrix();
-        m.translate(0, -1, 0);
+        let m: Matrix = new Matrix();
+        m.translate(0, 1, 1);
         this.camera.transform(m);
     }
 
@@ -66,6 +66,5 @@ export default class World
      */
     public animate()
     {
-
     }
 }

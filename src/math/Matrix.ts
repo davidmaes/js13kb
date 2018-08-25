@@ -1,18 +1,23 @@
 export default class Matrix {
-    protected m: Float32Array;
+    private m: Float32Array;
+    private t: Float32Array;
 
     /**
-     *
+     * @param {Float32Array} m
      */
-    public constructor()
+    public constructor(m: Float32Array = null)
     {
-        this.identity();
+        if (m) {
+            this.m = m;
+        } else {
+            this.identity();
+        }
     }
 
     /**
-     *
+     * @returns {Float32Array}
      */
-    public getFloat32Array() {
+    public getFloat32Array(): Float32Array {
         return this.m;
     }
 
@@ -24,7 +29,7 @@ export default class Matrix {
             1, 0, 0, 0,
             0, 1, 0, 0,
             0, 0, 1, 0,
-            0, 0, 0, 1,
+            0, 0, 0, 1
         ]);
     }
 
@@ -51,12 +56,14 @@ export default class Matrix {
      * @param z
      */
     public translate(x, y, z) {
-        this.m = new Float32Array([
+        let translation = new Matrix(new Float32Array([
             1, 0, 0, 0,
             0, 1, 0, 0,
             0, 0, 1, 0,
             x, y, z, 1,
-        ]);
+        ]));
+
+        return this.prepend(translation);
     }
 
     /**
@@ -67,12 +74,14 @@ export default class Matrix {
         let sin = Math.sin(radians);
         let cos = Math.cos(radians);
 
-        this.m = new Float32Array([
+        let rotation = new Matrix(new Float32Array([
             1, 0, 0, 0,
             0, cos, sin, 0,
             0, -sin, cos, 0,
             0, 0, 0, 1,
-        ]);
+        ]));
+
+        this.prepend(rotation);
     }
 
     /**
@@ -83,14 +92,19 @@ export default class Matrix {
         let sin = Math.sin(radians);
         let cos = Math.cos(radians);
 
-        this.m = new Float32Array([
+        let rotation = new Matrix(new Float32Array([
             cos, 0, -sin, 0,
             0, 1, 0, 0,
             sin, 0, cos, 0,
             0, 0, 0, 1,
-        ]);
+        ]));
+
+        this.prepend(rotation);
     }
 
+    /**
+     * @param degrees
+     */
     /**
      * @param degrees
      */
@@ -99,22 +113,42 @@ export default class Matrix {
         let sin = Math.sin(radians);
         let cos = Math.cos(radians);
 
-        this.m = new Float32Array([
+        let rotation = new Matrix(new Float32Array([
             cos, sin, 0, 0,
             -sin, cos, 0, 0,
             0, 0, 1, 0,
             0, 0, 0, 1,
-        ]);
+        ]));
+
+        this.prepend(rotation);
     }
 
     /**
      *
      */
-    public multiply(matrix: Matrix)
-    {
+    public prepend(matrix: Matrix) {
+        let lhs = matrix.getFloat32Array();
+        let rhs = this.m;
+
+        this.multiply(lhs, rhs);
+    }
+
+    /**
+     *
+     */
+    public append(matrix: Matrix) {
         let lhs = this.m;
         let rhs = matrix.getFloat32Array();
 
+        this.multiply(lhs, rhs);
+    }
+
+    /**
+     * @param lhs
+     * @param rhs
+     */
+    private multiply(lhs, rhs)
+    {
         this.m = new Float32Array([
             lhs[0] * rhs[0] + lhs[1] * rhs[4] + lhs[2] * rhs[8] + lhs[3] * rhs[12],
             lhs[0] * rhs[1] + lhs[1] * rhs[5] + lhs[2] * rhs[9] + lhs[3] * rhs[13],
@@ -133,7 +167,5 @@ export default class Matrix {
             lhs[12] * rhs[2] + lhs[13] * rhs[6] + lhs[14] * rhs[10] + lhs[15] * rhs[14],
             lhs[12] * rhs[3] + lhs[13] * rhs[7] + lhs[14] * rhs[11] + lhs[15] * rhs[15]
         ]);
-
-        console.log(this.m);
     }
 }
