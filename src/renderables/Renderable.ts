@@ -1,3 +1,5 @@
+import VertexBuffer from "../webgl/VertexBuffer";
+
 export default abstract class Renderable
 {
     /**
@@ -6,27 +8,32 @@ export default abstract class Renderable
     protected gl: WebGLRenderingContext;
 
     /**
-     * The vertexbuffer of the triangle.
-     */
-    private vertexBuffer: WebGLBuffer;
-
-    /**
-     *
+     * The shader program
      */
     private program: WebGLProgram;
 
     /**
-     *
+     * The vertexbuffer of the renderable.
+     */
+    private vertexBuffers: VertexBuffer[];
+
+    /**
+     * The indexbuffer of the renderable.
+     */
+    protected indexBuffer: WebGLBuffer;
+
+    /**
+     * The index of where to store the model matrix
      */
     private modelMatrixIndex: WebGLUniformLocation;
 
     /**
-     *
+     * The index of where to store the view matrix
      */
     private viewMatrixIndex: WebGLUniformLocation;
 
     /**
-     *
+     * The index of where to store the projection matrix
      */
     private projectionMatrixIndex: WebGLUniformLocation;
 
@@ -37,8 +44,11 @@ export default abstract class Renderable
     protected constructor(gl: WebGLRenderingContext)
     {
         this.gl = gl;
+        this.vertexBuffers = [];
+
         this.uploadProgram();
-        this.uploadVertexBuffer();
+        this.uploadVertexBuffers();
+        this.uploadIndexBuffer();
         this.retrieveMatrixIndices();
     }
 
@@ -49,6 +59,16 @@ export default abstract class Renderable
     {
         return this.program;
     }
+
+    /**
+     * @return {string} Id of the vertex shader.
+     */
+    abstract getVertexShader();
+
+    /**
+     * @return {string} Id of the fragment shader.
+     */
+    abstract getFragmentShader();
 
     /**
      * @returns {WebGLUniformLocation}
@@ -77,12 +97,11 @@ export default abstract class Renderable
     /**
      *
      */
-    public uploadProgram()
+    private uploadProgram()
     {
         this.program = this.gl.createProgram();
-
-        this.gl.attachShader(this.program, this.createShader('fragment-shader', this.gl.FRAGMENT_SHADER));
-        this.gl.attachShader(this.program, this.createShader('vertex-shader', this.gl.VERTEX_SHADER));
+        this.gl.attachShader(this.program, this.createShader(this.getVertexShader(), this.gl.VERTEX_SHADER));
+        this.gl.attachShader(this.program, this.createShader(this.getFragmentShader(), this.gl.FRAGMENT_SHADER));
         this.gl.linkProgram(this.program);
     }
 
@@ -105,22 +124,37 @@ export default abstract class Renderable
     /**
      *
      */
-    public uploadVertexBuffer()
-    {
-        this.vertexBuffer = this.gl.createBuffer();
+    abstract uploadVertexBuffers();
 
-        let vertexBufferIndex = this.gl.getAttribLocation(this.program, "aPosition");
+    /**
+     * @param {string} vertexBufferName
+     * @param {number[]} vertexBufferData
+     * @param {number} vertexBufferDataSize
+     */
+    protected uploadVertexBuffer(vertexBufferName: string, vertexBufferData: number[], vertexBufferDataSize: number) {
+        let vertexBuffer = this.gl.createBuffer();
+        let vertexBufferIndex = this.gl.getAttribLocation(this.program, vertexBufferName);
 
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexBuffer);
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.getVertices()), this.gl.STATIC_DRAW);
-        this.gl.vertexAttribPointer(vertexBufferIndex, 3, this.gl.FLOAT, false, 0, 0);
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(vertexBufferData), this.gl.STATIC_DRAW);
         this.gl.enableVertexAttribArray(vertexBufferIndex);
+
+        this.vertexBuffers.push(new VertexBuffer(vertexBuffer, vertexBufferIndex, vertexBufferDataSize));
     }
 
     /**
      *
      */
-    abstract getVertices();
+    public uploadIndexBuffer() {
+        this.indexBuffer = this.gl.createBuffer();
+        this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+        this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.getIndices()), this.gl.STATIC_DRAW);
+    }
+
+    /**
+     * @return {number[]}
+     */
+    abstract getIndices(): number[];
 
     /**
      *
@@ -129,6 +163,16 @@ export default abstract class Renderable
         this.modelMatrixIndex = this.gl.getUniformLocation(this.program, "uModel");
         this.viewMatrixIndex = this.gl.getUniformLocation(this.program, "uView");
         this.projectionMatrixIndex = this.gl.getUniformLocation(this.program, "uProjection");
+    }
+
+    /**
+     *
+     */
+    public setVertexAttributesPointers() {
+        for (let vertexBuffer of this.vertexBuffers) {
+            this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer.getVertexBuffer());
+            this.gl.vertexAttribPointer(vertexBuffer.getIndex(), vertexBuffer.getSize(), this.gl.FLOAT, false, 0, 0);
+        }
     }
 
     /**

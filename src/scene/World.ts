@@ -1,7 +1,8 @@
 import Camera from "./Camera";
-import TrackInstance from "./TrackInstance";
-import Track from "../renderables/Track";
+import Instance from "./Instance";
 import Matrix from "../math/Matrix";
+import Box from "../renderables/Box";
+import Track from "../renderables/Track";
 
 export default class World
 {
@@ -18,7 +19,12 @@ export default class World
     /**
      *
      */
-    private trackInstances: TrackInstance[];
+    private trackInstances: Instance[];
+
+    /**
+     *
+     */
+    private boxInstances: Instance[];
 
     /**
      * @param {WebGLRenderingContext} gl
@@ -36,20 +42,20 @@ export default class World
     public genesis()
     {
         this.trackInstances = [];
-
         let track = new Track(this.gl);
-
-        for (let x = 0; x < 10; x++) {
-            for (let z = 0; z < 10; z++) {
-                let trackInstance = new TrackInstance(track);
-                trackInstance.translate(-10 + x * 2, 0, z * -2);
-                this.trackInstances.push(trackInstance);
-            }
-        }
+        let trackInstance = new Instance(track);
+        trackInstance.translate(-4, 0, -10);
+        this.trackInstances.push(trackInstance);
+        
+        this.boxInstances = [];
+        let box = new Box(this.gl);
+        let boxInstance = new Instance(box);
+        boxInstance.translate(4, 0, -10);
+        this.boxInstances.push(boxInstance);
 
         let m: Matrix = new Matrix();
-        m.translate(0, 1, 1);
-        this.camera.transform(m);
+        m.translate(0, 1, 0);
+        this.camera.prepend(m);
     }
 
     /**
@@ -59,6 +65,7 @@ export default class World
     {
         this.camera.clear();
         this.camera.renderInstances(this.trackInstances);
+        this.camera.renderInstances(this.boxInstances);
     }
 
     /**
@@ -66,5 +73,12 @@ export default class World
      */
     public animate()
     {
+        for (let trackInstance of this.trackInstances) {
+            trackInstance.rotateY(1);
+        }
+
+        for (let boxInstance of this.boxInstances) {
+            boxInstance.rotateY(-1);
+        }
     }
 }

@@ -5,7 +5,7 @@ export default class ViewMatrix extends Matrix
     /**
      * @returns {Float32Array}
      */
-    public getInvertedFloat32Array()
+    public getInvertedFloat32Array(): Float32Array
     {
         let m = this.getFloat32Array();
 

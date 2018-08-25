@@ -1,6 +1,5 @@
 export default class Matrix {
     private m: Float32Array;
-    private t: Float32Array;
 
     /**
      * @param {Float32Array} m

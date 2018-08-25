@@ -25,8 +25,7 @@ export default class Camera
      * @param width
      * @param height
      */
-    public constructor(gl: WebGLRenderingContext, width: number, height: number)
-    {
+    public constructor(gl: WebGLRenderingContext, width: number, height: number) {
         this.gl = gl;
         this.setupMatrices();
         this.configureGL(width, height);
@@ -35,8 +34,7 @@ export default class Camera
     /**
      *
      */
-    private setupMatrices()
-    {
+    private setupMatrices() {
         this.projectionMatrix = new Matrix();
         this.projectionMatrix.perspective(45, 1024 / 768, 1, 100);
         this.viewMatrix = new ViewMatrix();
@@ -69,6 +67,8 @@ export default class Camera
 
         this.gl.useProgram(firstRenderable.getProgram());
 
+        firstRenderable.setVertexAttributesPointers();
+
         this.uploadMatrix(firstRenderable.getViewMatrixIndex(), this.viewMatrix.getInvertedFloat32Array());
         this.uploadMatrix(firstRenderable.getProjectionMatrixIndex(), this.projectionMatrix.getFloat32Array());
 
@@ -91,7 +91,14 @@ export default class Camera
     /**
      * @param {Matrix} matrix
      */
-    public transform(matrix: Matrix) {
+    public prepend(matrix: Matrix) {
         this.viewMatrix.prepend(matrix);
+    }
+
+    /**
+     * @param {Matrix} matrix
+     */
+    public append(matrix: Matrix) {
+        this.viewMatrix.append(matrix);
     }
 }
