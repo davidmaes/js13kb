@@ -22,18 +22,6 @@
 
     </script>
 
-    <script id="track-fragment-shader" type="x-shader/x-fragment">
-
-        precision mediump float;
-
-        varying vec4 vColor;
-
-        void main(void) {
-            gl_FragColor = vColor;
-        }
-
-    </script>
-
     <script id="box-vertex-shader" type="x-shader/x-vertex">
 
         attribute vec3 aPosition;
@@ -52,7 +40,7 @@
 
     </script>
 
-    <script id="box-fragment-shader" type="x-shader/x-fragment">
+    <script id="color-fragment-shader" type="x-shader/x-fragment">
 
         precision mediump float;
 

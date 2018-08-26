@@ -18,7 +18,7 @@ export default class Instance extends Matrix
     /**
      * @returns {Renderable}
      */
-    getRenderable() {
+    public getRenderable() {
         return this.renderable;
     }
 }

@@ -1,6 +1,6 @@
 import Renderable from "./Renderable";
 
-export default class Box extends Renderable
+export default class Track extends Renderable
 {
     /**
      * @param {WebGLRenderingContext} gl
@@ -13,15 +13,15 @@ export default class Box extends Renderable
     /**
      * @inheritDoc
      */
-    getVertexShader() {
+    protected getVertexShaderId() {
         return 'track-vertex-shader';
     }
 
     /**
      * @inheritDoc
      */
-    getFragmentShader() {
-        return 'track-fragment-shader';
+    protected getFragmentShaderId() {
+        return 'color-fragment-shader';
     }
 
     /**
@@ -59,14 +59,14 @@ export default class Box extends Renderable
     /**
      * @inheritDoc
      */
-    getIndices() {
+    protected getIndices() {
         return [0, 1, 2, 3];
     }
 
     /**
      * @inheritDoc
      */
-    draw() {
+    public draw() {
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         this.gl.drawElements(this.gl.LINE_LOOP, 4, this.gl.UNSIGNED_SHORT, 0);
     }

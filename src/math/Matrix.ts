@@ -21,7 +21,7 @@ export default class Matrix {
     }
 
     /**
-     *
+     * Change the matrix back to identity.
      */
     public identity() {
         this.m = new Float32Array([
@@ -33,6 +33,8 @@ export default class Matrix {
     }
 
     /**
+     * Turn the matrix into a perspective matrix.
+     *
      * @param fov
      * @param aspect
      * @param zMin
@@ -50,6 +52,8 @@ export default class Matrix {
     }
 
     /**
+     * Translates the position by x, y, z.
+     *
      * @param x
      * @param y
      * @param z
@@ -66,6 +70,8 @@ export default class Matrix {
     }
 
     /**
+     * Rotates around the x axis.
+     *
      * @param degrees
      */
     public rotateX(degrees) {
@@ -84,6 +90,8 @@ export default class Matrix {
     }
 
     /**
+     * Rotates around the y axis.
+     *
      * @param degrees
      */
     public rotateY(degrees) {
@@ -102,9 +110,8 @@ export default class Matrix {
     }
 
     /**
-     * @param degrees
-     */
-    /**
+     * Rotates around the z axis.
+     *
      * @param degrees
      */
     public rotateZ(degrees) {

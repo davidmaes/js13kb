@@ -2,26 +2,27 @@ import Camera from "./Camera";
 import Instance from "./Instance";
 import Matrix from "../math/Matrix";
 import Box from "../renderables/Box";
+import Track from "../renderables/Track";
 
 export default class World
 {
     /**
-     *
+     * The WebGL rendering context.
      */
     private gl: WebGLRenderingContext;
 
     /**
-     *
+     * The camera
      */
     private camera: Camera;
 
     /**
-     *
+     * A list of track instances
      */
     private trackInstances: Instance[];
 
     /**
-     *
+     * A list of box instances
      */
     private boxInstances: Instance[];
 
@@ -43,6 +44,18 @@ export default class World
     public genesis()
     {
         let box = new Box(this.gl);
+        box.uploadGraphics();
+
+        let track = new Track(this.gl);
+        track.uploadGraphics();
+
+        for (let x = 0; x < 20; x++) {
+            for (let z = 0; z < 20; z++) {
+                let trackInstance = new Instance(track);
+                trackInstance.translate(-30 + x * 3, 5, z * -3);
+                this.trackInstances.push(trackInstance);
+            }
+        }
 
         for (let x = 0; x < 20; x++) {
             for (let z = 0; z < 20; z++) {
@@ -58,7 +71,7 @@ export default class World
     }
 
     /**
-     * Render the world.
+     * Renders the world.
      */
     public render()
     {
@@ -68,7 +81,7 @@ export default class World
     }
 
     /**
-     *
+     * Animates anything that needs animation.
      */
     public animate()
     {

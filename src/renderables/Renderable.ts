@@ -3,7 +3,7 @@ import VertexBuffer from "../webgl/VertexBuffer";
 export default abstract class Renderable
 {
     /**
-     * 
+     * The WebGL rendering context.
      */
     protected gl: WebGLRenderingContext;
 
@@ -41,34 +41,20 @@ export default abstract class Renderable
      *
      * @param {WebGLRenderingContext} gl
      */
-    protected constructor(gl: WebGLRenderingContext)
-    {
+    protected constructor(gl: WebGLRenderingContext) {
         this.gl = gl;
         this.vertexBuffers = [];
-
-        this.uploadProgram();
-        this.uploadVertexBuffers();
-        this.uploadIndexBuffer();
-        this.retrieveMatrixIndices();
     }
 
     /**
+     * Returns the program for rendering classes.
+     *
      * @returns {WebGLProgram}
      */
     public getProgram(): WebGLProgram
     {
         return this.program;
     }
-
-    /**
-     * @return {string} Id of the vertex shader.
-     */
-    abstract getVertexShader();
-
-    /**
-     * @return {string} Id of the fragment shader.
-     */
-    abstract getFragmentShader();
 
     /**
      * @returns {WebGLUniformLocation}
@@ -95,15 +81,35 @@ export default abstract class Renderable
     }
 
     /**
-     *
+     * Uploads all graphics of this renderable, such as shaders, vertexbuffers, indexbuffer.
+     */
+    public uploadGraphics() {
+        this.uploadProgram();
+        this.uploadVertexBuffers();
+        this.uploadIndexBuffer();
+        this.retrieveMatrixIndices();
+    }
+
+    /**
+     * Creates and uploads both the vertex as fragment shader to the GPU.
      */
     private uploadProgram()
     {
         this.program = this.gl.createProgram();
-        this.gl.attachShader(this.program, this.createShader(this.getVertexShader(), this.gl.VERTEX_SHADER));
-        this.gl.attachShader(this.program, this.createShader(this.getFragmentShader(), this.gl.FRAGMENT_SHADER));
+        this.gl.attachShader(this.program, this.createShader(this.getVertexShaderId(), this.gl.VERTEX_SHADER));
+        this.gl.attachShader(this.program, this.createShader(this.getFragmentShaderId(), this.gl.FRAGMENT_SHADER));
         this.gl.linkProgram(this.program);
     }
+
+    /**
+     * @return {string} Id of the vertex shader.
+     */
+    protected abstract getVertexShaderId();
+
+    /**
+     * @return {string} Id of the fragment shader.
+     */
+    protected abstract getFragmentShaderId();
 
     /**
      * @param {string} id
@@ -124,7 +130,7 @@ export default abstract class Renderable
     /**
      *
      */
-    abstract uploadVertexBuffers();
+    protected abstract uploadVertexBuffers();
 
     /**
      * @param {string} vertexBufferName
@@ -145,7 +151,7 @@ export default abstract class Renderable
     /**
      *
      */
-    public uploadIndexBuffer() {
+    private uploadIndexBuffer() {
         this.indexBuffer = this.gl.createBuffer();
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.getIndices()), this.gl.STATIC_DRAW);
@@ -154,7 +160,7 @@ export default abstract class Renderable
     /**
      * @return {number[]}
      */
-    abstract getIndices(): number[];
+    protected abstract getIndices(): number[];
 
     /**
      *
@@ -178,5 +184,5 @@ export default abstract class Renderable
     /**
      *
      */
-    abstract draw();
+    public abstract draw();
 }

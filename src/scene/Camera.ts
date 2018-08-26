@@ -6,17 +6,17 @@ import ViewMatrix from "../math/ViewMatrix";
 export default class Camera
 {
     /**
-     *
+     * The WebGL rendering context.
      */
     private gl: WebGLRenderingContext;
 
     /**
-     *
+     * The view matrix
      */
     private viewMatrix: ViewMatrix;
 
     /**
-     *
+     * The projection matrix
      */
     private projectionMatrix: Matrix;
 
@@ -32,7 +32,7 @@ export default class Camera
     }
 
     /**
-     *
+     * Creates the view and projection matrix.
      */
     private setupMatrices() {
         this.projectionMatrix = new Matrix();
@@ -41,6 +41,8 @@ export default class Camera
     }
 
     /**
+     * Sets some basic GL configuration parameters.
+     *
      * @param {number} width
      * @param {number} height
      */
@@ -52,7 +54,7 @@ export default class Camera
     }
 
     /**
-     *
+     * Clears the screen.
      */
     public clear() {
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
