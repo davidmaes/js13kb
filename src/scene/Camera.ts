@@ -62,6 +62,11 @@ export default class Camera
      * Note that this function expects instances of only one Renderable at at time.
      */
     public renderInstances(instances:Instance[]) {
+
+        if (instances.length == 0) {
+            return;
+        }
+
         let firstInstance: Instance = instances[0];
         let firstRenderable: Renderable = firstInstance.getRenderable();
 

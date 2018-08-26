@@ -2,7 +2,6 @@ import Camera from "./Camera";
 import Instance from "./Instance";
 import Matrix from "../math/Matrix";
 import Box from "../renderables/Box";
-import Track from "../renderables/Track";
 
 export default class World
 {
@@ -34,6 +33,8 @@ export default class World
     {
         this.gl = gl;
         this.camera = camera;
+        this.boxInstances = [];
+        this.trackInstances = [];
     }
 
     /**
@@ -41,20 +42,18 @@ export default class World
      */
     public genesis()
     {
-        this.trackInstances = [];
-        let track = new Track(this.gl);
-        let trackInstance = new Instance(track);
-        trackInstance.translate(-4, 0, -10);
-        this.trackInstances.push(trackInstance);
-        
-        this.boxInstances = [];
         let box = new Box(this.gl);
-        let boxInstance = new Instance(box);
-        boxInstance.translate(4, 0, -10);
-        this.boxInstances.push(boxInstance);
+
+        for (let x = 0; x < 20; x++) {
+            for (let z = 0; z < 20; z++) {
+                let boxInstance = new Instance(box);
+                boxInstance.translate(-30 + x * 3, 0, z * -3);
+                this.boxInstances.push(boxInstance);
+            }
+        }
 
         let m: Matrix = new Matrix();
-        m.translate(0, 1, 0);
+        m.translate(0, 3, 2);
         this.camera.prepend(m);
     }
 
