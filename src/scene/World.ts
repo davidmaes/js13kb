@@ -17,11 +17,6 @@ export default class World
     private camera: Camera;
 
     /**
-     * A list of track instances
-     */
-    private trackInstances: Instance[];
-
-    /**
      * A list of box instances
      */
     private boxInstances: Instance[];
@@ -35,7 +30,6 @@ export default class World
         this.gl = gl;
         this.camera = camera;
         this.boxInstances = [];
-        this.trackInstances = [];
     }
 
     /**
@@ -46,21 +40,10 @@ export default class World
         let box = new Box(this.gl);
         box.uploadGraphics();
 
-        let track = new Track(this.gl);
-        track.uploadGraphics();
-
-        for (let x = 0; x < 20; x++) {
-            for (let z = 0; z < 20; z++) {
-                let trackInstance = new Instance(track);
-                trackInstance.translate(-30 + x * 3, 5, z * -3);
-                this.trackInstances.push(trackInstance);
-            }
-        }
-
         for (let x = 0; x < 20; x++) {
             for (let z = 0; z < 20; z++) {
                 let boxInstance = new Instance(box);
-                boxInstance.translate(-30 + x * 3, 0, z * -3);
+                boxInstance.translate(-30 + x * 3, -10 + Math.random() * 20, z * -3);
                 this.boxInstances.push(boxInstance);
             }
         }
@@ -76,7 +59,6 @@ export default class World
     public render()
     {
         this.camera.clear();
-        this.camera.renderInstances(this.trackInstances);
         this.camera.renderInstances(this.boxInstances);
     }
 
@@ -85,12 +67,5 @@ export default class World
      */
     public animate()
     {
-        for (let trackInstance of this.trackInstances) {
-            trackInstance.rotateY(1);
-        }
-
-        for (let boxInstance of this.boxInstances) {
-            boxInstance.rotateY(-1);
-        }
     }
 }
