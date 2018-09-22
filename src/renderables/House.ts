@@ -1,6 +1,6 @@
 import Renderable from "./Renderable";
 
-export default class Box extends Renderable
+export default class House extends Renderable
 {
     /**
      * @param {WebGLRenderingContext} gl
@@ -15,7 +15,7 @@ export default class Box extends Renderable
      */
     protected getVertexShaderId() {
         return 'vertex-shader';
-    }
+    }status
 
     /**
      * @inheritDoc
@@ -36,25 +36,14 @@ export default class Box extends Renderable
      */
     protected  getVertices(): number[] {
         let lines: number[] = [
-            -0.5, 0.5, -0.5, 0.5, 0.5, -0.5,
-            0.5, 0.5, -0.5, 0.5, 0.5, 0.5,
-            0.5, 0.5, 0.5, -0.5, 0.5, 0.5,
-            -0.5, 0.5, 0.5, -0.5, 0.5, -0.5,
-            -0.5, 0.5, -0.5, -0.5, -0.5, -0.5,
-            0.5, 0.5, -0.5, 0.5, -0.5, -0.5,
-            0.5, 0.5, 0.5, 0.5, -0.5, 0.5,
-            -0.5, 0.5, 0.5, -0.5, -0.5, 0.5,
-            -0.5, -0.5, -0.5, 0.5, -0.5, -0.5,
-            0.5, -0.5, -0.5, 0.5, -0.5, 0.5,
-            0.5, -0.5, 0.5, -0.5, -0.5, 0.5,
-            -0.5, -0.5, 0.5, -0.5, -0.5, -0.5,
+            
         ];
 
         let vertices: number[] = [];
         for (let k = 0; k < 3; k++) {
 
-        for (let i = 0; i < lines.length; i += 6) {
-            for (let j = 0; j < 6; j++) {
+            for (let i = 0; i < lines.length; i += 6) {
+                for (let j = 0; j < 6; j++) {
 
                     console.log(i+j);
                     vertices.push(lines[i+j] - 0.01 + Math.random() * 0.1);

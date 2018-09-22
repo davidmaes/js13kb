@@ -47,7 +47,7 @@ export default class Camera
      * @param {number} height
      */
     private configureGL(width: number, height: number) {
-        this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        this.gl.clearColor(1.0, 0.953, 0.886, 1.0);
         this.gl.enable(this.gl.DEPTH_TEST);
         this.gl.viewport(0, 0, width, height);
 

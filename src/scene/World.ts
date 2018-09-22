@@ -2,7 +2,6 @@ import Camera from "./Camera";
 import Instance from "./Instance";
 import Matrix from "../math/Matrix";
 import Box from "../renderables/Box";
-import Track from "../renderables/Track";
 
 export default class World
 {

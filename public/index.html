@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>js13kb</title>
 
-    <script id="track-vertex-shader" type="x-shader/x-vertex">
+    <script id="vertex-shader" type="x-shader/x-vertex">
 
         attribute vec3 aPosition;
         attribute vec4 aColor;
@@ -22,32 +22,14 @@
 
     </script>
 
-    <script id="box-vertex-shader" type="x-shader/x-vertex">
-
-        attribute vec3 aPosition;
-        attribute vec4 aColor;
-
-        uniform mat4 uProjection;
-        uniform mat4 uModel;
-        uniform mat4 uView;
-
-        varying vec4 vColor;
-
-        void main(void) {
-            gl_Position = uProjection * uView * uModel * vec4(aPosition, 1.0);
-            vColor = aColor;
-        }
-
-    </script>
-
-    <script id="color-fragment-shader" type="x-shader/x-fragment">
+    <script id="fragment-shader" type="x-shader/x-fragment">
 
         precision mediump float;
 
         varying vec4 vColor;
 
         void main(void) {
-            gl_FragColor = vColor;
+            gl_FragColor = vec4(0.203, 0.325, 0.439, 1.0);
         }
 
     </script>
