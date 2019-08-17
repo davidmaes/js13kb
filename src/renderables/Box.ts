@@ -14,7 +14,7 @@ export default class Box extends Renderable
      * @inheritDoc
      */
     protected getVertexShaderId() {
-        return 'box-vertex-shader';
+        return 'simple-vertex-shader';
     }
 
     /**

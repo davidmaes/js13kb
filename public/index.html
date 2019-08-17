@@ -4,25 +4,7 @@
     <meta charset="UTF-8">
     <title>js13kb</title>
 
-    <script id="track-vertex-shader" type="x-shader/x-vertex">
-
-        attribute vec3 aPosition;
-        attribute vec4 aColor;
-
-        uniform mat4 uProjection;
-        uniform mat4 uModel;
-        uniform mat4 uView;
-
-        varying vec4 vColor;
-
-        void main(void) {
-            gl_Position = uProjection * uView * uModel * vec4(aPosition, 1.0);
-            vColor = aColor;
-        }
-
-    </script>
-
-    <script id="box-vertex-shader" type="x-shader/x-vertex">
+    <script id="simple-vertex-shader" type="x-shader/x-vertex">
 
         attribute vec3 aPosition;
         attribute vec4 aColor;

@@ -1,0 +1,2 @@
+zip -r js13kb.zip public
+du -h js13kb.zip
